@@ -24,3 +24,4 @@ public class StandardPassenger extends Passenger {
         }
         return false;
     }
+}

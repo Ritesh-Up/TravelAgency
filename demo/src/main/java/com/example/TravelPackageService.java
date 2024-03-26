@@ -1,15 +1,8 @@
-package com;
+package com.example;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.example.Activity;
-import com.example.Destination;
-import com.example.GoldPassenger;
-import com.example.Passenger;
-import com.example.StandardPassenger;
-import com.example.TravelPackage;
 
 public class TravelPackageService {
 
@@ -107,8 +100,10 @@ public class TravelPackageService {
             if (p.getId() == passengerId) {
                 System.out.println("Name: " + p.getName() + ", Passenger Number: " + p.getPassengerNumber());
                 // Assuming a method in Passenger to get balance and signed-up activities
-                if (p instanceof StandardPassenger || p instanceof GoldPassenger) {
+                if (p instanceof StandardPassenger){
                     System.out.println("Balance: " + ((StandardPassenger) p).getBalance());
+                } else if(p instanceof GoldPassenger) {
+                    System.out.println("Balance: " + ((GoldPassenger) p).getBalance());
                 }
                 // printSignedUpActivities(p);
                 return;

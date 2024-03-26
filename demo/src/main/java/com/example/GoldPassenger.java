@@ -8,6 +8,14 @@ public class GoldPassenger extends Passenger {
         this.balance = balance;
     }
 
+    public double getBalance() {
+        return this.balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
     public boolean signUpForActivity(Activity activity) {
         double discountedCost = activity.getCost() * 0.9; // 10% discount
         if (balance >= discountedCost && activity.isAvailable()) {
@@ -17,3 +25,4 @@ public class GoldPassenger extends Passenger {
         }
         return false;
     }
+}
