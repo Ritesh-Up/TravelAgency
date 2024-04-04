@@ -1,51 +1,56 @@
 package com.example;
 
+import com.example.entities.*;
+import com.example.entities.passengers.*;
+import com.example.services.*;
+
+import java.util.HashMap;
+
 public class Main {
     public static void main(String[] args) {
-        // Create activities
-        Activity snorkeling = new Activity(1, "Snorkeling", "Explore underwater life.", 50.0, 10);
-        Activity hiking = new Activity(2, "Hiking", "Discover scenic mountain trails.", 40.0, 15);
+        // Initialize services with a shared HashMap storage
+        HashMap<Integer, TravelPackage> travelPackages = new HashMap<>();
+        TravelPackageService travelPackageService = new TravelPackageService(travelPackages);
+        ActivityService activityService = new ActivityService(travelPackages);
+        PassengerService passengerService = new PassengerService(travelPackages);
 
-        // Create destination
-        Destination coralIsland = new Destination(1, "Coral Island");
-        coralIsland.getActivities().add(snorkeling);
-        coralIsland.getActivities().add(hiking);
+        // Create a travel package
+        TravelPackage europeTrip = new TravelPackage(1, "Europe Trip", 5);
+        travelPackageService.addTravelPackage(europeTrip);
 
-        // Create passengers
-        StandardPassenger johnDoe = new StandardPassenger(1, "John Doe", 101, 200.0);
-        GoldPassenger janeDoe = new GoldPassenger(2, "Jane Doe", 102, 300.0);
-        PremiumPassenger jackDoe = new PremiumPassenger(3, "Jack Doe", 103);
+        // Create destinations and add to the package
+        Destination paris = new Destination(101, "Paris");
+        Destination rome = new Destination(102, "Rome");
+        europeTrip.getDestinations().put(paris.getId(), paris);
+        europeTrip.getDestinations().put(rome.getId(), rome);
 
-        // Create travel package
-        TravelPackage summerAdventure = new TravelPackage(1, "Summer Adventure", 5);
-        summerAdventure.getDestinations().add(coralIsland);
+        // Create activities and add to destinations
+        Activity eiffelTour = new Activity(1001, "Eiffel Tower Tour", "Tour the famous Eiffel Tower.", 150.0, 20);
+        Activity colosseumTour = new Activity(1002, "Colosseum Tour", "Explore the ancient Colosseum.", 125.0, 15);
+        paris.getActivities().put(eiffelTour.getId(), eiffelTour);
+        rome.getActivities().put(colosseumTour.getId(), colosseumTour);
 
-        // Create service and add the package
-        TravelPackageService service = new TravelPackageService();
-        service.addTravelPackage(summerAdventure);
+        // Create passengers and add to the travel package
+        Passenger ritesh = new StandardPassenger(201, "John Doe", 123, 1000.0);
+        Passenger ritika = new GoldPassenger(202, "Jane Doe", 1234, 10000  ); // Assuming GoldPassenger has a discount rate
+        europeTrip.getPassengers().put(ritesh.getId(), ritesh);
+        europeTrip.getPassengers().put(ritika.getId(), ritika);
 
-        // Add passengers to the package
-        service.addPassengerToPackage(1, johnDoe);
-        service.addPassengerToPackage(1, janeDoe);
-        service.addPassengerToPackage(1, jackDoe);
+        // Simulate signing up for activities
+        ritesh.signUpForActivity(eiffelTour);
+        ritika.signUpForActivity(colosseumTour);
 
-        // Sign up passengers for activities
-        service.signUpPassengerForActivity(1, 1, 1, 1); // John signs up for Snorkeling
-        service.signUpPassengerForActivity(1, 2, 1, 2); // Jane signs up for Hiking
+        // Print travel package itinerary
+        travelPackageService.printItinerary(europeTrip.getId());
 
-        // Utilize the service's utility methods to print information
-        System.out.println("=== Travel Package Details ===");
-        service.printItinerary(1);
+        // Print passenger list for the travel package
+        passengerService.printPassengerList(europeTrip.getId());
 
-        System.out.println("\n=== Passenger List ===");
-        service.printPassengerList(1);
+        // Print details for a specific passenger
+        passengerService.printPassengerDetails(ritesh.getId());
+        passengerService.printPassengerDetails(ritika.getId());
 
-        // System.out.println("\n=== Available Activities ===");
-        // service.printAvailableActivities();
-
-        System.out.println("\n=== Passenger Details ===");
-        // Assuming implementation of printPassengerDetails method that handles individual passenger details
-        service.printPassengerDetails(1);
-        service.printPassengerDetails(2);
+        // Print available activities across all packages
+        activityService.printAvailableActivities();
     }
 }
